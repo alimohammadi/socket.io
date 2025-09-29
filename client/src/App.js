@@ -6,10 +6,15 @@ const socket = io("http://localhost:3001");
 
 function App() {
   const [message, setMessage] = useState("");
+  const [room, setRoom] = useState("");
   const [messageRecieved, setMessageRecieved] = useState("");
 
+  const joinRoom = () => {
+    if (room) socket.emit("join_room", room);
+  };
+
   const sendMessage = () => {
-    if (message) socket.emit("send_message", { message });
+    if (message) socket.emit("send_message", { message, room });
   };
 
   useEffect(() => {
@@ -20,6 +25,15 @@ function App() {
 
   return (
     <div className="App">
+      <div>
+        <input
+          onChange={(e) => setRoom(e.target.value)}
+          placeholder="Room number..."
+        />
+
+        <button onClick={joinRoom}>Join Room</button>
+      </div>
+
       <input
         onChange={(e) => setMessage(e.target.value)}
         placeholder="Message..."
